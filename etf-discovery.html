@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upstox – Discover ETFs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .phone {
+      width: 360px;
+      background: #F5F5F7;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: #fff;
+      padding: 10px 20px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .status-bar .time { font-size: 12px; font-weight: 700; color: #111; }
+    .status-bar .icons { font-size: 11px; font-weight: 600; color: #111; }
+
+    /* ── TOP NAV ── */
+    .top-nav {
+      background: #fff;
+      padding: 8px 14px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #F2F0E5;
+    }
+    .back-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .back-btn svg { width: 18px; height: 18px; color: #1A1A1A; }
+    .nav-title { font-size: 15px; font-weight: 700; color: #1A1A1A; }
+    .what-etf {
+      font-size: 11px; font-weight: 600; color: #6F00FF;
+      display: flex; align-items: center; gap: 3px; text-decoration: none;
+    }
+    .what-etf svg { width: 12px; height: 12px; }
+
+    /* ── SCROLL BODY ── */
+    .scroll-body {
+      overflow-y: auto;
+      height: 680px;
+      background: #F5F5F7;
+    }
+    .scroll-body::-webkit-scrollbar { display: none; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #EEF4FF 0%, #F5F0FF 100%);
+      padding: 18px 16px 16px;
+      text-align: center;
+    }
+    .hero h2 { font-size: 16px; font-weight: 800; color: #1A1A1A; line-height: 1.35; margin-bottom: 4px; }
+    .hero p  { font-size: 12px; color: #555; font-weight: 500; margin-bottom: 10px; }
+    .trust-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #fff; border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px; font-weight: 600; color: #6F00FF;
+      box-shadow: 0 1px 6px rgba(111,0,255,0.1);
+    }
+    .trust-pill svg { width: 14px; height: 14px; }
+
+    /* ── SEARCH ── */
+    .search-wrap { background: #fff; padding: 10px 14px; }
+    .search-bar {
+      background: #F5F5F5; border: 1px solid #EBEBEB;
+      border-radius: 10px; height: 38px;
+      display: flex; align-items: center; padding: 0 12px; gap: 8px;
+    }
+    .search-bar svg { width: 15px; height: 15px; color: #999; }
+    .search-bar span { font-size: 12px; color: #999; }
+
+    /* ── SECTION WRAPPER ── */
+    .section {
+      background: #fff;
+      margin-bottom: 8px;
+      padding: 16px 0 8px;
+    }
+    .section-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 0 14px 12px;
+    }
+    .section-header h3 { font-size: 14px; font-weight: 700; color: #1A1A1A; }
+    .section-header p  { font-size: 11px; color: #888; font-weight: 500; margin-top: 2px; }
+    .view-all {
+      font-size: 11.5px; font-weight: 600; color: #6F00FF;
+      display: flex; align-items: center; gap: 2px; white-space: nowrap; margin-top: 2px;
+    }
+    .view-all svg { width: 12px; height: 12px; }
+
+    /* ── HORIZONTAL SCROLL ── */
+    .h-scroll {
+      display: flex; gap: 10px;
+      overflow-x: auto;
+      padding: 0 14px 6px;
+    }
+    .h-scroll::-webkit-scrollbar { display: none; }
+
+    /* ══════════════════════════════════════════════════
+       BASE-SLOT-COMPONENT  (from Figma spec)
+    ══════════════════════════════════════════════════ */
+    .bsc {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px;
+      gap: 10px;
+      width: 260px;
+      min-width: 200px;
+      background: #FFFFFF;
+      border: 1px solid #F2F0E5;
+      box-shadow: 0px 2px 0px #F2F0E5;
+      border-radius: 12px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    /* Full-width variant for list rows */
+    .bsc.full {
+      width: calc(100% - 28px);
+      margin: 0 14px;
+      margin-bottom: 8px;
+    }
+    .bsc.full:last-child { margin-bottom: 0; }
+
+    /* ── TOP SECTION: logo + name + LTP ── */
+    .bsc-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    /* logo-wrapper */
+    .logo-wrapper {
+      box-sizing: border-box;
+      width: 32px; height: 32px;
+      border: 1px solid #F1F1F1;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .amc-logo {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 800; color: #fff;
+    }
+
+    /* ETF name — 2 lines, no over-heading */
+    .bsc-title {
+      flex: 1; min-width: 0;
+    }
+    .bsc-title .name {
+      font-family: 'Inter'; font-weight: 600; font-size: 12px;
+      line-height: 16px; color: #262626;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* LTP block — top-right */
+    .bsc-ltp {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .bsc-ltp .s-label {
+      font-family: 'Inter'; font-weight: 400; font-size: 10px;
+      line-height: 14px; color: #777777;
+    }
+    .bsc-ltp .s-value {
+      font-family: 'Inter'; font-weight: 600; font-size: 12px;
+      line-height: 16px; color: #262626;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+
+    /* ── DIVIDER ── */
+    .bsc-divider {
+      width: 100%; height: 1px;
+      background: #F2F0E5;
+      margin: 0;
+    }
+
+    /* ── BOTTOM SECTION: AUM left, 1Y Return right ── */
+    .bsc-slots {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .slot {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .slot.left  { align-items: flex-start; }
+    .slot.right { align-items: flex-end; }
+
+    .slot .s-label {
+      font-family: 'Inter'; font-weight: 400; font-size: 10px;
+      line-height: 14px; color: #777777;
+    }
+    .slot .s-value {
+      font-family: 'Inter'; font-weight: 600; font-size: 12px;
+      line-height: 16px; color: #262626;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+    .slot .s-value.green { color: #008858; }
+
+    /* ── CATEGORY GRID ── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 14px 10px;
+    }
+    .cat-card {
+      background: #fff;
+      border: 1px solid #F2F0E5;
+      box-shadow: 0px 2px 0px #F2F0E5;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+    }
+    .cat-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; margin-bottom: 8px;
+    }
+    .cat-card h4 { font-size: 13px; font-weight: 700; color: #262626; margin-bottom: 2px; }
+    .cat-card .cat-sub {
+      font-size: 10px; color: #777; font-weight: 400; line-height: 1.4; margin-bottom: 8px;
+    }
+    .cat-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .num-etfs { font-size: 10px; color: #888; font-weight: 500; }
+    .cat-ret {
+      font-size: 11px; font-weight: 600; color: #008858;
+      display: flex; align-items: center; gap: 3px;
+    }
+    .up-arrow { font-size: 10px; }
+
+    /* ── SOCIAL PROOF STRIP ── */
+    .social-strip {
+      margin: 0 14px 12px;
+      background: linear-gradient(135deg, #F5F0FF 0%, #EEF4FF 100%);
+      border: 1px solid #E4D4FF;
+      border-radius: 10px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar-stack {
+      display: flex;
+      flex-direction: row-reverse;
+      flex-shrink: 0;
+    }
+    .avatar {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: #fff;
+      margin-left: -7px;
+    }
+    .avatar:last-child { margin-left: 0; }
+    .avatar.a1 { background: #6F00FF; }
+    .avatar.a2 { background: #387ED1; }
+    .avatar.a3 { background: #008858; }
+    .avatar.a4 { background: #E8701A; }
+    .social-copy { flex: 1; min-width: 0; }
+    .social-copy strong {
+      display: block;
+      font-size: 11.5px; font-weight: 700; color: #1A1A1A;
+      line-height: 1.35;
+    }
+    .social-copy span {
+      font-size: 10px; color: #666; font-weight: 400; line-height: 1.4;
+    }
+    .social-badge {
+      background: #6F00FF;
+      color: #fff;
+      font-size: 9px; font-weight: 700;
+      border-radius: 5px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: 0.2px;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      background: #fff; border-top: 1px solid #F0F0F0;
+      display: flex; height: 58px;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px; cursor: pointer;
+    }
+    .nav-item .nav-label { font-size: 10px; font-weight: 600; color: #aaa; }
+    .nav-item.active .nav-label { color: #6F00FF; }
+    .nav-item svg { width: 20px; height: 20px; color: #aaa; }
+    .nav-item.active svg { color: #6F00FF; }
+
+    /* AMC colours */
+    .amc-nippon   { background: #C0392B; }
+    .amc-sbi      { background: #250970; }
+    .amc-hdfc     { background: #004C97; }
+    .amc-kotak    { background: #ED1C24; }
+    .amc-uti      { background: #FF6600; }
+    .amc-icici    { background: #E8701A; }
+    .amc-mirae    { background: #0055A5; }
+    .amc-axis     { background: #800000; }
+    .amc-zerodha  { background: #387ED1; }
+    .amc-groww    { background: #00C853; }
+    .amc-angel    { background: #E8501A; }
+    .amc-absl     { background: #C0392B; }
+  </style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <span class="icons">4G 🔋</span>
+  </div>
+
+  <!-- TOP NAV -->
+  <div class="top-nav">
+    <div class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </div>
+    <span class="nav-title">Discover ETFs</span>
+    <a class="what-etf" href="#">
+      What is ETF
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    </a>
+  </div>
+
+  <!-- SCROLL BODY -->
+  <div class="scroll-body">
+
+    <!-- HERO -->
+    <div class="hero">
+      <h2>Tired of picking stocks?<br/>Own the market with ETFs.</h2>
+      <p>Start with just ₹10</p>
+      <div class="trust-pill">
+        <svg viewBox="0 0 24 24" fill="#6F00FF"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Trusted by 2.6 crore Indians
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Search by name or type</span>
+      </div>
+    </div>
+
+    <!-- ── 1. POPULAR ETFs ── -->
+    <div class="section">
+      <div class="section-header">
+        <div><h3>Popular ETFs</h3></div>
+        <a class="view-all" href="#">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
+      </div>
+      <div class="h-scroll">
+
+        <!-- Card 1 -->
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-nippon">NI</div></div>
+            <div class="bsc-title">
+              <div class="name">Nippon Nifty 50 BeES</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹278.50</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹22,450 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+24.5%</span></div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-sbi">SBI</div></div>
+            <div class="bsc-title">
+              <div class="name">SBI ETF Nifty 50</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹232.10</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹1.85L Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.8%</span></div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-hdfc">HD</div></div>
+            <div class="bsc-title">
+              <div class="name">HDFC Nifty 50 ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹246.80</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹12,567 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+22.9%</span></div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-mirae">MA</div></div>
+            <div class="bsc-title">
+              <div class="name">Mirae Asset Nifty 50</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹91.30</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹9,876 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.1%</span></div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-kotak">KO</div></div>
+            <div class="bsc-title">
+              <div class="name">Kotak Nifty 50 ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹196.20</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹8,234 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.2%</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 2. NIFTY 50 ETFs ── -->
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <h3>Nifty 50 ETFs</h3>
+          <p>Own India's Top 50 companies from ₹10</p>
+        </div>
+        <a class="view-all" href="#">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
+      </div>
+
+      <!-- Social proof strip -->
+      <div class="social-strip">
+        <div class="social-copy">
+          <strong>6 lakh+ investors started here. You can too.</strong>
+          <span>India's most-owned ETF · low cost · ₹10 to start</span>
+        </div>
+        <div class="social-badge">#1 Pick</div>
+      </div>
+
+      <div class="h-scroll">
+
+        <div class="bsc" onclick="window.open('nifty50-scrip-detail.html','_blank')" style="cursor:pointer;">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-nippon">NI</div></div>
+            <div class="bsc-title"><div class="name">Nippon India Nifty 50 BeES</div></div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹278.50</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹22,450 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+24.5%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc" onclick="window.open('nifty50-scrip-detail.html','_blank')" style="cursor:pointer;">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-sbi">SBI</div></div>
+            <div class="bsc-title"><div class="name">SBI ETF Nifty 50</div></div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹232.10</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹1.85L Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.8%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc" onclick="window.open('nifty50-scrip-detail.html','_blank')" style="cursor:pointer;">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-hdfc">HD</div></div>
+            <div class="bsc-title"><div class="name">HDFC Nifty 50 ETF</div></div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹246.80</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹12,567 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+22.9%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc" onclick="window.open('nifty50-scrip-detail.html','_blank')" style="cursor:pointer;">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-kotak">KO</div></div>
+            <div class="bsc-title"><div class="name">Kotak Nifty 50 ETF</div></div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹196.20</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹8,234 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.2%</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 3. GOLD ETFs ── -->
+    <div class="section">
+      <div class="section-header">
+        <div><h3>Gold ETFs</h3></div>
+        <a class="view-all" href="#">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
+      </div>
+      <div class="h-scroll">
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-nippon">NI</div></div>
+            <div class="bsc-title">
+              <div class="name">Nippon India Gold BeES</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹63.20</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹9,340 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+18.4%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-hdfc">HD</div></div>
+            <div class="bsc-title">
+              <div class="name">HDFC Gold ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹62.80</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹3,210 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+17.9%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-sbi">SBI</div></div>
+            <div class="bsc-title">
+              <div class="name">SBI Gold ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹61.50</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹2,780 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+18.1%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-kotak">KO</div></div>
+            <div class="bsc-title">
+              <div class="name">Kotak Gold ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹63.10</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹3,890 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+18.6%</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 4. SILVER ETFs ── -->
+    <div class="section">
+      <div class="section-header">
+        <div><h3>Silver ETFs</h3></div>
+        <a class="view-all" href="#">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></a>
+      </div>
+      <div class="h-scroll">
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-nippon">NI</div></div>
+            <div class="bsc-title">
+              <div class="name">Nippon India Silver ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹112.30</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹4,230 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+22.8%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-hdfc">HD</div></div>
+            <div class="bsc-title">
+              <div class="name">HDFC Silver ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹110.50</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹1,870 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+21.9%</span></div>
+          </div>
+        </div>
+
+        <div class="bsc">
+          <div class="bsc-header">
+            <div class="logo-wrapper"><div class="amc-logo amc-icici">IC</div></div>
+            <div class="bsc-title">
+              <div class="name">ICICI Pru Silver ETF</div>
+            </div>
+            <div class="bsc-ltp">
+              <span class="s-label">LTP</span>
+              <span class="s-value">₹111.20</span>
+            </div>
+          </div>
+          <div class="bsc-divider"></div>
+          <div class="bsc-slots">
+            <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹1,340 Cr</span></div>
+            <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+22.3%</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 5. BROWSE BY CATEGORY ── -->
+    <div class="section" style="padding-bottom:14px;">
+      <div class="section-header">
+        <div><h3>Browse by Category</h3></div>
+      </div>
+      <div class="cat-grid">
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#EEF4FF;">📊</div>
+          <h4>Index</h4>
+          <div class="cat-sub">Track Nifty, Sensex &amp; more</div>
+          <div class="cat-footer">
+            <span class="num-etfs">42 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>21.24% 1Y</span>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#FFF8E6;">🌍</div>
+          <h4>Global</h4>
+          <div class="cat-sub">Own Meta, Apple, Google &amp; more</div>
+          <div class="cat-footer">
+            <span class="num-etfs">15 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>36.82% 1Y</span>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#FFF6E6;">🥇</div>
+          <h4>Gold</h4>
+          <div class="cat-sub">Invest in pure gold digitally</div>
+          <div class="cat-footer">
+            <span class="num-etfs">8 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>18.4% 1Y</span>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#F2F2F5;">🥈</div>
+          <h4>Silver</h4>
+          <div class="cat-sub">Invest in pure silver digitally</div>
+          <div class="cat-footer">
+            <span class="num-etfs">5 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>22.8% 1Y</span>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#FFF0F0;">🏭</div>
+          <h4>Sector</h4>
+          <div class="cat-sub">Tech, EVs, Defence &amp; more</div>
+          <div class="cat-footer">
+            <span class="num-etfs">35 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>29.27% 1Y</span>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#E6F0FF;">📄</div>
+          <h4>Debt</h4>
+          <div class="cat-sub">Bonds &amp; Govt. Securities</div>
+          <div class="cat-footer">
+            <span class="num-etfs">12 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>5.18% 1Y</span>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-icon" style="background:#E6FAF0;">💧</div>
+          <h4>Liquid</h4>
+          <div class="cat-sub">Park cash, earn daily returns</div>
+          <div class="cat-footer">
+            <span class="num-etfs">4 ETFs</span>
+            <span class="cat-ret"><span class="up-arrow">↗</span>6.2% 1Y</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="height:8px;"></div>
+
+  </div><!-- end scroll-body -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span class="nav-label">My Lists</span>
+    </div>
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span class="nav-label">ETFs</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="nav-label">Portfolio</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      <span class="nav-label">Funds</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

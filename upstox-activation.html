@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upstox – Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    /* ─── PHONE SHELL ─────────────────────────────────────── */
+    .phone {
+      width: 360px;
+      background: #fff;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    /* ─── STATUS BAR ─────────────────────────────────────── */
+    .status-bar {
+      background: #fff;
+      padding: 10px 20px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .status-bar .time { font-size: 12px; font-weight: 700; color: #111; }
+    .status-bar .icons { display: flex; gap: 6px; align-items: center; }
+    .status-bar .icons svg { width: 14px; height: 14px; }
+
+    /* ─── TOP NAV ─────────────────────────────────────────── */
+    .top-nav {
+      background: #fff;
+      padding: 6px 12px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-wrap {
+      width: 36px; height: 36px;
+      background: #6F00FF;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .logo-wrap .logo-text {
+      font-size: 13px; font-weight: 900; color: #fff; letter-spacing: -0.5px;
+    }
+    .logo-wrap .logo-dot {
+      position: absolute; bottom: 6px; right: 5px;
+      width: 8px; height: 8px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    .search-bar {
+      flex: 1;
+      height: 36px;
+      background: #F5F5F5;
+      border-radius: 10px;
+      display: flex; align-items: center;
+      padding: 0 10px; gap: 6px;
+      border: 1px solid #EBEBEB;
+    }
+    .search-bar svg { width: 14px; height: 14px; color: #888; flex-shrink: 0; }
+    .search-bar span { font-size: 12px; color: #999; }
+    .bell-btn {
+      width: 36px; height: 36px;
+      border: 1.5px solid #E0E0E0;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .plus-btn {
+      height: 36px; padding: 0 12px;
+      background: #111;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .plus-btn span { font-size: 12px; font-weight: 700; color: #fff; }
+    .plus-btn .plus-icon { color: #6F00FF; font-weight: 900; margin-right: 2px; }
+
+    /* ─── MARKET TICKER ───────────────────────────────────── */
+    .market-ticker {
+      background: #fff;
+      padding: 6px 14px 10px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .ticker-item { display: flex; flex-direction: column; gap: 1px; }
+    .ticker-label { font-size: 10px; font-weight: 700; color: #222; letter-spacing: 0.3px; }
+    .ticker-value { font-size: 13px; font-weight: 700; }
+    .ticker-value.green { color: #12B76A; }
+    .ticker-value.red { color: #F04438; }
+    .ticker-change { font-size: 10px; font-weight: 500; }
+    .ticker-change.green { color: #12B76A; }
+    .ticker-change.red { color: #F04438; }
+    .ticker-divider { width: 1px; height: 28px; background: #E8E8E8; }
+    .ticker-arrow { margin-left: auto; color: #888; font-size: 14px; }
+
+    /* ─── SCROLLABLE BODY ─────────────────────────────────── */
+    .scroll-body {
+      overflow-y: auto;
+      height: 620px;
+      background: #F5F5F7;
+    }
+    .scroll-body::-webkit-scrollbar { display: none; }
+
+    /* ─── SECTION CARD ─────────────────────────────────────── */
+    .card {
+      background: #fff;
+      margin-bottom: 8px;
+    }
+
+    /* ─── MTF PROMO BANNER ────────────────────────────────── */
+    .mtf-banner {
+      background: linear-gradient(135deg, #FFFBF0 0%, #FFF8E6 100%);
+      margin: 8px 12px;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #FFE9A0;
+      position: relative;
+    }
+    .mtf-banner .mtf-text h4 { font-size: 13px; font-weight: 700; color: #1A1A1A; }
+    .mtf-banner .mtf-text p { font-size: 11px; color: #666; margin-top: 2px; }
+    .mtf-banner .mtf-text a { font-size: 12px; font-weight: 700; color: #6F00FF; margin-top: 4px; display: block; }
+    .mtf-banner .mtf-badge {
+      font-size: 28px; font-weight: 900;
+      color: #6F00FF;
+      font-style: italic;
+      opacity: 0.2;
+      position: absolute; right: 12px; top: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+    .mtf-close {
+      position: absolute; top: 8px; right: 8px;
+      width: 16px; height: 16px;
+      background: rgba(0,0,0,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8px; color: #555; cursor: pointer;
+    }
+
+    /* ─── ONBOARDING STEPPER ─────────────────────────────── */
+    .stepper {
+      background: #fff;
+      padding: 14px 14px 12px;
+    }
+
+    /* Each step row */
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    /* Left rail: icon + connector line */
+    .step-rail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 28px;
+      flex-shrink: 0;
+    }
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-dot.green  { background: #12B76A; }
+    .step-dot.purple { background: #6F00FF; }
+    .step-dot.grey   { background: #E0E0E0; }
+    .step-dot svg    { width: 14px; height: 14px; color: #fff; }
+
+    .step-line {
+      width: 2px;
+      flex: 1;
+      min-height: 12px;
+      margin: 3px 0;
+    }
+    .step-line.purple { background: #6F00FF; }
+    .step-line.grey   { background: #E0E0E0; }
+
+    /* Right content */
+    .step-body {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: 14px;
+    }
+    .step:last-child .step-body { padding-bottom: 0; }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 28px;
+    }
+    .step-header h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1A1A1A;
+      line-height: 1.3;
+    }
+    .step-header p {
+      font-size: 11px;
+      color: #888;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+    .step-header .header-left { flex: 1; min-width: 0; }
+
+    /* Muted state for pending steps */
+    .step.pending .step-header h4 { color: #B0B0B0; }
+    .step.pending .step-header p  { color: #CBCBCB; }
+
+    /* CTA buttons */
+    .step-cta {
+      background: #6F00FF;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .step-cta-ghost {
+      background: none;
+      border: 1.5px solid #D8D8D8;
+      color: #B0B0B0;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ── Uplearn benefit (inside step 2) ── */
+    .uplearn-nudge {
+      margin-top: 10px;
+      background: #F9F5FF;
+      border: 1px solid #EDE5FA;
+      border-radius: 10px;
+      padding: 9px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .uplearn-nudge .nudge-icon {
+      width: 30px; height: 30px;
+      background: #6F00FF;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .uplearn-nudge .nudge-icon svg { width: 16px; height: 16px; color: #fff; }
+    .uplearn-nudge .nudge-text { flex: 1; min-width: 0; }
+    .uplearn-nudge .nudge-text h5 {
+      font-size: 11.5px; font-weight: 700; color: #1A1A1A; line-height: 1.3;
+      display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;
+    }
+    .uplearn-nudge .nudge-text span {
+      font-size: 10px; color: #777; font-weight: 500; line-height: 1.4;
+    }
+    .nudge-tag {
+      background: #F0E6FF;
+      color: #6F00FF;
+      font-size: 9px;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 2px 6px;
+      white-space: nowrap;
+      display: inline;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* ─── CATEGORY ICONS ──────────────────────────────────── */
+    .categories {
+      background: #fff;
+      padding: 14px 12px 10px;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      row-gap: 16px;
+    }
+    .cat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .cat-icon {
+      width: 46px; height: 46px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .cat-icon.purple-light { background: #F0E6FF; }
+    .cat-icon.teal { background: #E6F7F5; }
+    .cat-icon.blue { background: #E6EEFF; }
+    .cat-icon.pink { background: #FFE6F5; }
+    .cat-icon.orange { background: #FFF0E6; }
+    .cat-icon.green { background: #E6F5EC; }
+    .cat-label {
+      font-size: 10px; font-weight: 600; color: #444;
+      text-align: center; line-height: 1.2;
+    }
+
+    /* ─── QUICK PILLS ─────────────────────────────────────── */
+    .quick-pills {
+      background: #fff;
+      padding: 12px 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+      gap: 8px;
+    }
+    .quick-pills::-webkit-scrollbar { display: none; }
+    .q-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #F8F8F8;
+      border: 1px solid #E8E8E8;
+      border-radius: 20px;
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .q-pill .q-icon { font-size: 12px; }
+
+    /* ─── PORTFOLIO SECTION ───────────────────────────────── */
+    .portfolio-section {
+      background: #fff;
+      padding: 14px 14px;
+    }
+    .portfolio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .portfolio-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1A1A1A;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .portfolio-header a {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6F00FF;
+      text-decoration: none;
+    }
+    .portfolio-row {
+      display: flex;
+      gap: 12px;
+    }
+    .pf-card {
+      flex: 1;
+      background: #F8F8F8;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .pf-card .pf-label {
+      font-size: 10px;
+      color: #888;
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .pf-card .pf-label .chevron { font-size: 8px; color: #aaa; }
+    .pf-card .pf-value {
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .pf-card .pf-value.red { color: #F04438; }
+    .pf-card .pf-value.green { color: #12B76A; }
+    .pf-card .pf-pct {
+      font-size: 10px;
+      font-weight: 600;
+      color: #12B76A;
+    }
+
+    /* ─── UPLEARN QUIZ WIDGET ────────────────────────────── */
+    .quiz-widget {
+      background: #fff;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    /* Header gradient band */
+    .quiz-widget-header {
+      background: linear-gradient(135deg, #F3EEFF 0%, #EDE5FA 100%);
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid #EDE5FA;
+    }
+    .quiz-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .quiz-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz-flame { font-size: 22px; line-height: 1; }
+    .quiz-title-text {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1A1A1A;
+      letter-spacing: -0.2px;
+    }
+    .quiz-title-sub {
+      font-size: 10px;
+      font-weight: 500;
+      color: #9B6CD4;
+      margin-top: 1px;
+    }
+    .streak-badge {
+      background: #6F00FF;
+      border-radius: 20px;
+      padding: 4px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .streak-count {
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .streak-label {
+      font-size: 8px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    /* 7-day streak row */
+    .streak-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0;
+    }
+    .streak-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+    .streak-day span {
+      font-size: 8.5px;
+      font-weight: 600;
+      color: #AAAAAA;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+    .streak-day.today span { color: #6F00FF; font-weight: 800; }
+    .streak-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .streak-dot.filled {
+      background: #6F00FF;
+    }
+    .streak-dot.filled::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: rgba(255,255,255,0.55);
+      border-radius: 50%;
+    }
+    .streak-dot.empty {
+      background: #E4E4E4;
+    }
+    .streak-dot.today-dot {
+      background: #6F00FF;
+      box-shadow: 0 0 0 3px rgba(111,0,255,0.2);
+    }
+    .streak-dot.missed {
+      background: #FFE8E8;
+      border: 1.5px solid #F9CACA;
+    }
+    .streak-dot.missed::after {
+      content: '×';
+      font-size: 10px;
+      font-weight: 800;
+      color: #D53627;
+    }
+
+    /* Quiz body */
+    .quiz-body {
+      padding: 14px;
+    }
+
+    /* Concept + timer row */
+    .quiz-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .quiz-concept-tag {
+      background: #F0E6FF;
+      color: #6F00FF;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.2px;
+    }
+    .quiz-qnum {
+      font-size: 10px;
+      font-weight: 600;
+      color: #BBBBBB;
+    }
+
+    /* Question text */
+    .quiz-question-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1A1A1A;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    /* Answer options */
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .quiz-option {
+      padding: 10px 14px;
+      border: 1.5px solid #E8E8E8;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      background: #FAFAFA;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .quiz-option:active { transform: scale(0.98); }
+    .quiz-option .opt-letter {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #F0E6FF;
+      color: #6F00FF;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .quiz-option.selected-correct {
+      background: #F0FBF6;
+      border-color: #008858;
+      color: #008858;
+    }
+    .quiz-option.selected-correct .opt-letter {
+      background: #008858;
+      color: #fff;
+    }
+    .quiz-option.selected-wrong {
+      background: #FFF5F4;
+      border-color: #D53627;
+      color: #D53627;
+    }
+    .quiz-option.selected-wrong .opt-letter {
+      background: #D53627;
+      color: #fff;
+    }
+    .quiz-option.reveal-correct {
+      background: #F0FBF6;
+      border-color: #008858;
+      color: #008858;
+    }
+    .quiz-option.reveal-correct .opt-letter {
+      background: #008858;
+      color: #fff;
+    }
+    .quiz-option.disabled { pointer-events: none; opacity: 0.55; }
+
+    /* Result banner */
+    .quiz-result-banner {
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .quiz-result-banner.correct {
+      background: #F0FBF6;
+      color: #008858;
+      border: 1px solid #C2EBD9;
+    }
+    .quiz-result-banner.wrong {
+      background: #FFF5F4;
+      color: #D53627;
+      border: 1px solid #FAD0CA;
+    }
+
+    /* Explanation */
+    .quiz-explanation {
+      background: #F9F5FF;
+      border: 1px solid #EDE5FA;
+      border-radius: 10px;
+      padding: 12px 12px;
+      margin-top: 10px;
+    }
+    .explanation-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1A1A1A;
+      margin-bottom: 6px;
+    }
+    .quiz-explanation p {
+      font-size: 11.5px;
+      font-weight: 400;
+      color: #444;
+      line-height: 1.55;
+      margin-bottom: 6px;
+    }
+    .quiz-explanation .exp-bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .quiz-explanation .exp-bullet {
+      font-size: 11px;
+      font-weight: 500;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    /* Action stocks */
+    .quiz-action-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0 8px;
+    }
+    .quiz-action-header span:first-child {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+    .quiz-action-see-all {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6F00FF;
+      cursor: pointer;
+    }
+
+    .quiz-stocks-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .quiz-stocks-scroll::-webkit-scrollbar { display: none; }
+
+    .quiz-stock-card {
+      flex-shrink: 0;
+      width: 120px;
+      background: #FAFAFA;
+      border: 1px solid #F0F0F0;
+      border-radius: 10px;
+      padding: 10px 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .qs-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1A1A1A;
+      letter-spacing: -0.2px;
+    }
+    .qs-meta {
+      font-size: 9px;
+      font-weight: 500;
+      color: #AAAAAA;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .qs-price {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1A1A1A;
+      font-feature-settings: 'tnum' on;
+    }
+    .qs-change {
+      font-size: 10px;
+      font-weight: 600;
+      font-feature-settings: 'tnum' on;
+      margin-bottom: 6px;
+    }
+    .qs-change.green { color: #008858; }
+    .qs-change.red   { color: #D53627; }
+    .qs-trade-btn {
+      width: 100%;
+      height: 26px;
+      background: #6F00FF;
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-top: auto;
+    }
+    /* Date pill for dividend stocks */
+    .qs-date-pill {
+      display: inline-block;
+      background: #FFF8E6;
+      border: 1px solid #FFE9A0;
+      color: #B87A00;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    /* Next question button */
+    .quiz-next-btn {
+      width: 100%;
+      height: 40px;
+      background: none;
+      border: 1.5px solid #6F00FF;
+      border-radius: 10px;
+      color: #6F00FF;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* ─── TOTAL CASH ──────────────────────────────────────── */
+    .cash-section {
+      background: #fff;
+      padding: 14px 14px 8px;
+      border-top: 1px solid #F0F0F0;
+    }
+    .cash-section h4 {
+      font-size: 13px; font-weight: 700; color: #1A1A1A;
+      margin-bottom: 2px;
+    }
+    .cash-section p { font-size: 11px; color: #888; }
+
+    /* ─── BOTTOM NAV ──────────────────────────────────────── */
+    .bottom-nav {
+      background: #fff;
+      border-top: 1px solid #F0F0F0;
+      display: flex;
+      height: 58px;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+    }
+    .nav-item .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #aaa;
+    }
+    .nav-item.active .nav-label { color: #6F00FF; }
+    .nav-item svg { width: 20px; height: 20px; color: #aaa; }
+    .nav-item.active svg { color: #6F00FF; }
+
+    /* Flash button */
+    .flash-fab {
+      position: absolute;
+      bottom: 72px;
+      right: 16px;
+      width: 46px; height: 46px;
+      background: linear-gradient(138deg, #975BD4, #6F00FF);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(111,0,255,0.4);
+    }
+    .flash-fab svg { width: 22px; height: 22px; color: #fff; }
+
+  </style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div class="icons">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="6" width="4" height="12" rx="1"/><rect x="7" y="4" width="4" height="14" rx="1"/><rect x="13" y="2" width="4" height="16" rx="1"/><rect x="19" y="0" width="4" height="18" rx="1" opacity="0.3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M20 11h2v4h-2v-4z" fill="currentColor" stroke="currentColor" stroke-width="1"/></svg>
+    </div>
+  </div>
+
+  <!-- TOP NAV -->
+  <div class="top-nav">
+    <div class="logo-wrap">
+      <span class="logo-text">up</span>
+    </div>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Search for scrips</span>
+    </div>
+    <div class="bell-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </div>
+    <div class="plus-btn">
+      <span><span class="plus-icon">✦</span>Plus</span>
+    </div>
+  </div>
+
+  <!-- SCROLLABLE BODY -->
+  <div class="scroll-body">
+
+    <!-- MARKET TICKER -->
+    <div class="market-ticker card">
+      <div class="ticker-item">
+        <span class="ticker-label">NIFTY50</span>
+        <span class="ticker-value red">24,571.09</span>
+        <span class="ticker-change red">−120.34 (2.99%)</span>
+      </div>
+      <div class="ticker-divider"></div>
+      <div class="ticker-item">
+        <span class="ticker-label">NIFTY BANK</span>
+        <span class="ticker-value green">56,993.15</span>
+        <span class="ticker-change green">+232.07 (1.08%)</span>
+      </div>
+      <div class="ticker-arrow">⌄</div>
+    </div>
+
+
+    <!-- ── ONBOARDING STEPPER ── -->
+    <div class="stepper card">
+
+      <!-- Step 1: Done -->
+      <div class="step">
+        <div class="step-rail">
+          <div class="step-dot green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="step-line purple"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-header">
+            <div class="header-left"><h4>Account is ready!</h4></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Active — Add Funds -->
+      <div class="step">
+        <div class="step-rail">
+          <div class="step-dot purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="step-line grey"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-header">
+            <div class="header-left">
+              <h4>Add Funds to Upstox</h4>
+              <p>Fund your account to start trading</p>
+            </div>
+            <button class="step-cta">+ Add Funds</button>
+          </div>
+          <!-- Uplearn benefit nudge -->
+          <div class="uplearn-nudge">
+            <div class="nudge-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="nudge-text">
+              <h5>Free Uplearn Pro <span class="nudge-tag">Worth ₹2,499</span></h5>
+              <span>Master breakout strategies and learn to spot multibaggers.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-rail">
+          <div class="step-dot grey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-header">
+            <div class="header-left">
+              <h4>Start with just ₹10</h4>
+              <p>Own India's top 50 companies via ETFs</p>
+            </div>
+            <button class="step-cta" onclick="window.open('etf-discovery.html','_blank')">Explore ETFs</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- ── END STEPPER ── -->
+
+    <!-- CATEGORIES -->
+    <div class="categories card">
+      <div class="cat-grid">
+        <div class="cat-item">
+          <div class="cat-icon teal">↗️</div>
+          <span class="cat-label">Options</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon purple-light">📊</div>
+          <span class="cat-label">Futures</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon blue">📈</div>
+          <span class="cat-label">Stocks</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon pink">🥧</div>
+          <span class="cat-label">MF</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon orange">💧</div>
+          <span class="cat-label">Commodity</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon purple-light">💼</div>
+          <span class="cat-label">MTF</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon green">🔔</div>
+          <span class="cat-label">IPO</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon orange">🏅</div>
+          <span class="cat-label">Gold</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon purple-light">⭐</div>
+          <span class="cat-label">Advisory</span>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon blue">⚙️</div>
+          <span class="cat-label">More</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK PILLS -->
+    <div class="quick-pills card">
+      <div class="q-pill"><span class="q-icon">📉</span> Option chain</div>
+      <div class="q-pill"><span class="q-icon">₹</span> FII/DII</div>
+      <div class="q-pill"><span class="q-icon">⚡</span> Scalper</div>
+      <div class="q-pill"><span class="q-icon">🕐</span> OI analysis</div>
+    </div>
+    <div class="quick-pills card" style="padding-top:0; margin-top:-8px;">
+      <div class="q-pill"><span class="q-icon">📐</span> Chart 360</div>
+      <div class="q-pill"><span class="q-icon">🏗️</span> Strategy builder</div>
+      <div class="q-pill"><span class="q-icon">💰</span> Affordable options</div>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="portfolio-section card">
+      <div class="portfolio-header">
+        <h3>💼 Portfolio (Today) ↰</h3>
+        <a href="#">6 Insights &rsaquo;</a>
+      </div>
+      <div class="portfolio-row">
+        <div class="pf-card">
+          <div class="pf-label">Positions P&amp;L (2) <span class="chevron">›</span></div>
+          <div class="pf-value red">−99,99,999.99</div>
+        </div>
+        <div class="pf-card">
+          <div class="pf-label">Holdings P&amp;L (32) <span class="chevron">›</span></div>
+          <div class="pf-value green">+99,99,999.99</div>
+          <div class="pf-pct">(+99.99%)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── UPLEARN QUIZ WIDGET ── -->
+    <div class="quiz-widget card" id="quizWidget">
+
+      <!-- Header: title + streak -->
+      <div class="quiz-widget-header">
+        <div class="quiz-title-row">
+          <div class="quiz-title-left">
+            <span class="quiz-flame">🔥</span>
+            <div>
+              <div class="quiz-title-text">UpLearn Daily Quiz</div>
+              <div class="quiz-title-sub">Learn a concept · spot the trade · act</div>
+            </div>
+          </div>
+          <div class="streak-badge">
+            <span class="streak-count">4</span>
+            <span class="streak-label">day streak</span>
+          </div>
+        </div>
+
+        <!-- 7-day streak dots -->
+        <div class="streak-row">
+          <div class="streak-day">
+            <div class="streak-dot filled"></div>
+            <span>Mon</span>
+          </div>
+          <div class="streak-day">
+            <div class="streak-dot filled"></div>
+            <span>Tue</span>
+          </div>
+          <div class="streak-day">
+            <div class="streak-dot filled"></div>
+            <span>Wed</span>
+          </div>
+          <div class="streak-day">
+            <div class="streak-dot filled"></div>
+            <span>Thu</span>
+          </div>
+          <div class="streak-day">
+            <div class="streak-dot missed"></div>
+            <span>Fri</span>
+          </div>
+          <div class="streak-day">
+            <div class="streak-dot empty"></div>
+            <span>Sat</span>
+          </div>
+          <div class="streak-day today">
+            <div class="streak-dot today-dot"></div>
+            <span>Today</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── QUIZ CONTENT ── -->
+      <div class="quiz-body">
+
+        <!-- ── Q1: Marubozu ── -->
+        <div id="q1-block">
+
+          <!-- Question state -->
+          <div id="q1-question">
+            <div class="quiz-meta-row">
+              <span class="quiz-concept-tag">📊 Candlestick Patterns</span>
+              <span class="quiz-qnum">Q1 of 2</span>
+            </div>
+            <div class="quiz-question-text">
+              A stock opens at ₹100, closes at ₹118 — with <strong>no upper or lower shadow</strong>. What pattern is this?
+            </div>
+            <div class="quiz-options" id="q1-opts">
+              <div class="quiz-option" onclick="answerQuiz('q1', this, false)">
+                <span class="opt-letter">A</span> Doji
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q1', this, true)">
+                <span class="opt-letter">B</span> Marubozu
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q1', this, false)">
+                <span class="opt-letter">C</span> Hammer
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q1', this, false)">
+                <span class="opt-letter">D</span> Bullish Engulfing
+              </div>
+            </div>
+          </div>
+
+          <!-- Answered state (hidden) -->
+          <div id="q1-answered" style="display:none;">
+            <div class="quiz-meta-row">
+              <span class="quiz-concept-tag">📊 Candlestick Patterns</span>
+              <span class="quiz-qnum">Q1 of 2</span>
+            </div>
+            <div class="quiz-question-text">
+              A stock opens at ₹100, closes at ₹118 — with <strong>no upper or lower shadow</strong>. What pattern is this?
+            </div>
+            <!-- options re-shown locked -->
+            <div class="quiz-options">
+              <div class="quiz-option disabled"><span class="opt-letter">A</span> Doji</div>
+              <div class="quiz-option reveal-correct disabled"><span class="opt-letter">B</span> Marubozu ✓</div>
+              <div class="quiz-option disabled"><span class="opt-letter">C</span> Hammer</div>
+              <div class="quiz-option disabled"><span class="opt-letter">D</span> Bullish Engulfing</div>
+            </div>
+
+            <!-- result banner (swapped by JS) -->
+            <div class="quiz-result-banner correct" id="q1-result-banner">
+              <span>🎉</span> Correct! You nailed it.
+            </div>
+
+            <!-- explanation -->
+            <div class="quiz-explanation">
+              <div class="explanation-title">🕯 What is a Marubozu?</div>
+              <p>A <strong>Bullish Marubozu</strong> has zero shadows — buyers were in control from the very first tick to the last. No hesitation, no pullback.</p>
+              <div class="exp-bullets">
+                <div class="exp-bullet">🐂 Signals strong bullish momentum</div>
+                <div class="exp-bullet">📈 Often the start of a sustained rally</div>
+                <div class="exp-bullet">⚡ High-conviction breakout entry signal</div>
+              </div>
+            </div>
+
+            <!-- action list -->
+            <div class="quiz-action-header">
+              <span>🎯 Stocks with Bullish Marubozu today</span>
+              <span class="quiz-action-see-all">See all</span>
+            </div>
+            <div class="quiz-stocks-scroll">
+              <div class="quiz-stock-card">
+                <div class="qs-name">RELIANCE</div>
+                <div class="qs-meta">Bullish Marubozu</div>
+                <div class="qs-price">₹2,876</div>
+                <div class="qs-change green">+2.8%</div>
+                <button class="qs-trade-btn">+ Trade</button>
+              </div>
+              <div class="quiz-stock-card">
+                <div class="qs-name">HDFCBANK</div>
+                <div class="qs-meta">Bullish Marubozu</div>
+                <div class="qs-price">₹1,642</div>
+                <div class="qs-change green">+1.9%</div>
+                <button class="qs-trade-btn">+ Trade</button>
+              </div>
+              <div class="quiz-stock-card">
+                <div class="qs-name">TCS</div>
+                <div class="qs-meta">Bullish Marubozu</div>
+                <div class="qs-price">₹3,410</div>
+                <div class="qs-change green">+3.1%</div>
+                <button class="qs-trade-btn">+ Trade</button>
+              </div>
+              <div class="quiz-stock-card">
+                <div class="qs-name">INFY</div>
+                <div class="qs-meta">Bullish Marubozu</div>
+                <div class="qs-price">₹1,520</div>
+                <div class="qs-change green">+2.4%</div>
+                <button class="qs-trade-btn">+ Trade</button>
+              </div>
+            </div>
+
+            <button class="quiz-next-btn" onclick="showQ2()">Next Question →</button>
+          </div>
+
+        </div><!-- /q1-block -->
+
+        <!-- ── Q2: Ex-Dividend Date ── (hidden initially) -->
+        <div id="q2-block" style="display:none;">
+
+          <!-- Question state -->
+          <div id="q2-question">
+            <div class="quiz-meta-row">
+              <span class="quiz-concept-tag">💰 Dividends</span>
+              <span class="quiz-qnum">Q2 of 2</span>
+            </div>
+            <div class="quiz-question-text">
+              You want to receive ₹8 dividend from ITC. By <strong>which date</strong> must you own the shares?
+            </div>
+            <div class="quiz-options" id="q2-opts">
+              <div class="quiz-option" onclick="answerQuiz('q2', this, false)">
+                <span class="opt-letter">A</span> Payment Date
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q2', this, false)">
+                <span class="opt-letter">B</span> Record Date
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q2', this, true)">
+                <span class="opt-letter">C</span> Ex-Dividend Date
+              </div>
+              <div class="quiz-option" onclick="answerQuiz('q2', this, false)">
+                <span class="opt-letter">D</span> Board Meeting Date
+              </div>
+            </div>
+          </div>
+
+          <!-- Answered state (hidden) -->
+          <div id="q2-answered" style="display:none;">
+            <div class="quiz-meta-row">
+              <span class="quiz-concept-tag">💰 Dividends</span>
+              <span class="quiz-qnum">Q2 of 2</span>
+            </div>
+            <div class="quiz-question-text">
+              You want to receive ₹8 dividend from ITC. By <strong>which date</strong> must you own the shares?
+            </div>
+            <div class="quiz-options">
+              <div class="quiz-option disabled"><span class="opt-letter">A</span> Payment Date</div>
+              <div class="quiz-option disabled"><span class="opt-letter">B</span> Record Date</div>
+              <div class="quiz-option reveal-correct disabled"><span class="opt-letter">C</span> Ex-Dividend Date ✓</div>
+              <div class="quiz-option disabled"><span class="opt-letter">D</span> Board Meeting Date</div>
+            </div>
+
+            <div class="quiz-result-banner correct" id="q2-result-banner">
+              <span>🎉</span> Correct! You nailed it.
+            </div>
+
+            <div class="quiz-explanation">
+              <div class="explanation-title">📅 Ex-Dividend Date — the key date</div>
+              <p>To earn a dividend you must <strong>buy the stock before the Ex-Dividend Date</strong>. If you buy on or after that date, the dividend goes to the previous holder.</p>
+              <div class="exp-bullets">
+                <div class="exp-bullet">📌 Ex-Date = 1 day before Record Date</div>
+                <div class="exp-bullet">💸 Buy before Ex-Date → get dividend</div>
+                <div class="exp-bullet">⚠️ Stocks often dip by dividend amount on Ex-Date</div>
+              </div>
+            </div>
+
+            <div class="quiz-action-header">
+              <span>📅 Upcoming Ex-Dividend dates</span>
+              <span class="quiz-action-see-all">See all</span>
+            </div>
+            <div class="quiz-stocks-scroll">
+              <div class="quiz-stock-card">
+                <div class="qs-name">ITC</div>
+                <div class="qs-date-pill">Ex: Apr 12</div>
+                <div class="qs-price">₹428.50</div>
+                <div class="qs-change green">₹8.00 div</div>
+                <button class="qs-trade-btn">+ Buy</button>
+              </div>
+              <div class="quiz-stock-card">
+                <div class="qs-name">COALINDIA</div>
+                <div class="qs-date-pill">Ex: Apr 15</div>
+                <div class="qs-price">₹382.70</div>
+                <div class="qs-change green">₹5.50 div</div>
+                <button class="qs-trade-btn">+ Buy</button>
+              </div>
+              <div class="quiz-stock-card">
+                <div class="qs-name">ONGC</div>
+                <div class="qs-date-pill">Ex: Apr 18</div>
+                <div class="qs-price">₹271.40</div>
+                <div class="qs-change green">₹2.50 div</div>
+                <button class="qs-trade-btn">+ Buy</button>
+              </div>
+              <div class="quiz-stock-card">
+                <div class="qs-name">POWERGRID</div>
+                <div class="qs-date-pill">Ex: Apr 22</div>
+                <div class="qs-price">₹318.90</div>
+                <div class="qs-change green">₹4.00 div</div>
+                <button class="qs-trade-btn">+ Buy</button>
+              </div>
+            </div>
+
+            <div style="margin-top:12px; padding:10px 12px; background:#F9F5FF; border-radius:10px; display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:12px; font-weight:700; color:#1A1A1A;">🏆 Quiz complete! Streak extended</span>
+              <span style="font-size:18px;">+1 🔥</span>
+            </div>
+          </div>
+
+        </div><!-- /q2-block -->
+
+      </div><!-- /quiz-body -->
+    </div>
+    <!-- ── END QUIZ WIDGET ── -->
+
+    <!-- TOTAL CASH -->
+    <div class="cash-section card">
+      <h4>💳 Total cash for all segments</h4>
+      <p>Available margin across all your accounts</p>
+    </div>
+
+    <div style="height: 20px;"></div>
+
+  </div><!-- end scroll-body -->
+
+  <!-- FLASH FAB -->
+  <div class="flash-fab">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4.09 12.97H11L10 22l8.91-10.97H13L13 2z"/></svg>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span class="nav-label">My Lists</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="nav-label">Orders</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span class="nav-label">Portfolio</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+      <span class="nav-label">Funds</span>
+    </div>
+  </div>
+
+</div><!-- end phone -->
+
+<script>
+  function answerQuiz(qid, clickedEl, isCorrect) {
+    // Disable all options
+    const opts = document.querySelectorAll('#' + qid + '-opts .quiz-option');
+    opts.forEach(o => {
+      o.classList.add('disabled');
+      o.style.pointerEvents = 'none';
+    });
+
+    // Mark clicked option
+    clickedEl.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+
+    // Show answered state after short delay
+    setTimeout(function() {
+      document.getElementById(qid + '-question').style.display = 'none';
+      const answeredEl = document.getElementById(qid + '-answered');
+      answeredEl.style.display = 'block';
+
+      // If wrong, update result banner
+      if (!isCorrect) {
+        const banner = document.getElementById(qid + '-result-banner');
+        banner.className = 'quiz-result-banner wrong';
+        banner.innerHTML = '<span>😅</span> Not quite — the answer is <strong>Marubozu</strong>' + (qid === 'q2' ? '... wait, <strong>Ex-Dividend Date</strong>' : '') + '. See why below.';
+        if (qid === 'q1') {
+          banner.innerHTML = '<span>😅</span> Not quite — the answer is <strong>Marubozu</strong>. See why below.';
+        } else {
+          banner.innerHTML = '<span>😅</span> Not quite — the answer is <strong>Ex-Dividend Date</strong>. See why below.';
+        }
+      }
+
+      // Scroll widget into view
+      answeredEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 250);
+  }
+
+  function showQ2() {
+    document.getElementById('q1-block').style.display = 'none';
+    document.getElementById('q2-block').style.display = 'block';
+    document.getElementById('q2-block').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>

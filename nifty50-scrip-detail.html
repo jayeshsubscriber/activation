@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nifty 50 – Scrip Detail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #E1E1E1;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0 40px;
+    }
+
+    .phone {
+      width: 360px;
+      background: #EDF0F2;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: #EDF0F2;
+      height: 48px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .status-bar .time {
+      font-size: 15px;
+      font-weight: 600;
+      color: #111;
+      letter-spacing: -0.3px;
+    }
+    .status-bar .icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: #FFFFFF;
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+    .back-arrow {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .scrip-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .scrip-logo svg {
+      width: 20px;
+      height: 20px;
+    }
+    .scrip-title-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+    .scrip-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      white-space: nowrap;
+    }
+    .dropdown-chevron {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* NSE/BSE Toggle */
+    .exchange-toggle {
+      background: #F1F1F1;
+      border-radius: 6px;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .exchange-btn {
+      font-size: 11px;
+      font-weight: 600;
+      color: #777;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1;
+    }
+    .exchange-btn.active {
+      background: #FFFFFF;
+      color: #1A1A1A;
+      box-shadow: 0px 2px 8px rgba(158, 144, 99, 0.16);
+    }
+
+    /* LTP Block */
+    .topbar-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .ltp-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: #D53627;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+      line-height: 1.2;
+    }
+    .ltp-change {
+      font-size: 11px;
+      font-weight: 400;
+      color: #777777;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+      line-height: 1.2;
+    }
+
+    /* ── TABS ── */
+    .tabs-bar {
+      background: #FFFFFF;
+      height: 44px;
+      display: flex;
+      align-items: flex-end;
+      border-bottom: 1px solid #F2F0E5;
+      padding: 0 4px;
+    }
+    .tab {
+      flex: 1;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #AAAAAA;
+      cursor: pointer;
+      position: relative;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab.active {
+      color: #262626;
+      border-bottom: 2px solid #262626;
+    }
+
+    /* ── PAGE SCROLL AREA ── */
+    .page-scroll {
+      background: #EDF0F2;
+      overflow-y: auto;
+      max-height: calc(100vh - 80px);
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: #FFFFFF;
+      margin: 10px 12px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* ── TODAY'S MARKET ── */
+    .section-header {
+      padding: 14px 14px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1A1A1A;
+      letter-spacing: -0.1px;
+    }
+
+    .market-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      padding: 0 14px 14px;
+      gap: 0;
+    }
+    .stat-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stat-col:not(:last-child) {
+      padding-right: 6px;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 400;
+      color: #AAAAAA;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      line-height: 1.3;
+    }
+    .stat-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1A1A1A;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+      line-height: 1.4;
+    }
+    .stat-value.red { color: #D53627; }
+    .stat-value.green { color: #008858; }
+
+    /* Divider */
+    .section-divider {
+      height: 1px;
+      background: #F2F0E5;
+      margin: 0 14px;
+    }
+
+    /* Range Bars */
+    .range-section {
+      padding: 12px 14px;
+    }
+    .range-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .range-row:last-child {
+      margin-bottom: 0;
+    }
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .range-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: #777777;
+    }
+    .range-values {
+      display: flex;
+      gap: 12px;
+    }
+    .range-val {
+      font-size: 11px;
+      font-weight: 500;
+      color: #1A1A1A;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+    .range-val span {
+      color: #AAAAAA;
+      font-size: 10px;
+    }
+    .range-track {
+      position: relative;
+      height: 4px;
+      background: #F2F0E5;
+      border-radius: 2px;
+      overflow: visible;
+    }
+    .range-fill {
+      position: absolute;
+      top: 0;
+      height: 4px;
+      background: #DFB437;
+      border-radius: 2px;
+    }
+    .range-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      background: #FFFFFF;
+      border: 2px solid #DFB437;
+      border-radius: 50%;
+    }
+
+    /* ── NIFTY 50 ETFs SECTION ── */
+    .etf-section {
+      background: #FFFFFF;
+      margin: 10px 12px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .etf-section-head {
+      padding: 14px 14px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .etf-section-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .etf-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1A1A1A;
+      letter-spacing: -0.2px;
+    }
+    .etf-view-all {
+      font-size: 12px;
+      font-weight: 600;
+      color: #542087;
+      text-decoration: underline;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .etf-section-sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: #AAAAAA;
+      margin-top: 1px;
+    }
+
+    /* Social proof strip */
+    .social-strip {
+      margin: 10px 14px 8px;
+      background: #F3EEFF;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .social-copy {
+      min-width: 0;
+      overflow: hidden;
+    }
+    .social-copy strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1A1A1A;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .social-copy span {
+      font-size: 11px;
+      font-weight: 400;
+      color: #777777;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+    .social-badge {
+      flex-shrink: 0;
+      background: #542087;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    /* Horizontal scroll for ETF cards */
+    .h-scroll {
+      display: flex;
+      gap: 10px;
+      padding: 0 14px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .h-scroll::-webkit-scrollbar { display: none; }
+
+    /* BSC (base-slot-component) card */
+    .bsc {
+      flex-shrink: 0;
+      width: 200px;
+      background: #FFFFFF;
+      border: 1px solid #F2F0E5;
+      box-shadow: 0px 2px 0px #F2F0E5;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bsc-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .amc-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #FFFFFF;
+      flex-shrink: 0;
+      letter-spacing: -0.3px;
+    }
+    .amc-nippon { background: #C0392B; }
+    .amc-sbi    { background: #250970; }
+    .amc-hdfc   { background: #004C97; }
+    .amc-kotak  { background: #ED1C24; }
+    .bsc-title {
+      flex: 1;
+      min-width: 0;
+    }
+    .bsc-title .name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1A1A1A;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .bsc-ltp {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .bsc-ltp .s-label {
+      font-size: 9px;
+      font-weight: 500;
+      color: #AAAAAA;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .bsc-ltp .s-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1A1A1A;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+    .bsc-divider {
+      height: 1px;
+      background: #F2F0E5;
+    }
+    .bsc-slots {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .slot { display: flex; flex-direction: column; gap: 1px; }
+    .slot.right { align-items: flex-end; }
+    .slot .s-label {
+      font-size: 9px;
+      font-weight: 500;
+      color: #AAAAAA;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .slot .s-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1A1A1A;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+    .slot .s-value.green { color: #008858; }
+    .slot .s-value.red   { color: #D53627; }
+
+    /* ── OPTIONS SMARTLIST ── */
+    .options-header {
+      padding: 14px 14px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .options-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+    .options-more {
+      font-size: 12px;
+      font-weight: 500;
+      color: #542087;
+      cursor: pointer;
+    }
+
+    /* Filter Chips */
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      padding: 0 14px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #777777;
+      border: 1px solid #E5E5E5;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .chip.active {
+      background: #FBF8FD;
+      border: 1px solid #542087;
+      color: #542087;
+    }
+
+    /* Option Rows */
+    .option-list {
+      padding: 0 14px 4px;
+    }
+    .option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #F7F7F7;
+      gap: 8px;
+    }
+    .option-row:last-child {
+      border-bottom: none;
+    }
+    .option-left {
+      flex: 1;
+      min-width: 0;
+    }
+    .option-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1A1A1A;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .option-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: #AAAAAA;
+      margin-top: 2px;
+    }
+    .option-type-ce {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(0, 136, 88, 0.08);
+      color: #008858;
+      font-size: 10px;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .option-type-pe {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(213, 54, 39, 0.08);
+      color: #D53627;
+      font-size: 10px;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .option-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .option-price-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1px;
+    }
+    .option-ltp {
+      font-size: 13px;
+      font-weight: 600;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+    .option-ltp.green { color: #008858; }
+    .option-ltp.red { color: #D53627; }
+    .option-pct {
+      font-size: 11px;
+      font-weight: 400;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+    }
+    .option-pct.green { color: #008858; }
+    .option-pct.red { color: #D53627; }
+    .add-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #F8F4FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta-wrap {
+      background: #FFFFFF;
+      padding: 12px 16px 20px;
+      margin-top: 10px;
+    }
+
+    /* Quick Trade */
+    .quick-trade {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .trade-input-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .trade-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #AAAAAA;
+    }
+    .trade-input {
+      height: 40px;
+      border-radius: 8px;
+      border: 1.5px solid #008858;
+      padding: 0 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1A1A1A;
+      font-family: 'Inter', sans-serif;
+      font-feature-settings: 'tnum' on, 'lnum' on;
+      outline: none;
+    }
+    .trade-input.sell {
+      border-color: #D53627;
+    }
+
+    .cta-btn {
+      width: 100%;
+      height: 48px;
+      background: #542087;
+      border-radius: 12px;
+      border: none;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      letter-spacing: -0.2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <!-- Signal + WiFi + Battery -->
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <rect x="0" y="4" width="3" height="8" rx="1" fill="#111"/>
+          <rect x="4.5" y="2.5" width="3" height="9.5" rx="1" fill="#111"/>
+          <rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#111"/>
+          <rect x="13.5" y="3" width="2" height="9" rx="1" fill="#111" opacity="0.3"/>
+        </svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+          <path d="M8 3C10.2 3 12.2 3.9 13.6 5.4L15 4C13.2 2.1 10.7 1 8 1C5.3 1 2.8 2.1 1 4L2.4 5.4C3.8 3.9 5.8 3 8 3Z" fill="#111"/>
+          <path d="M8 6C9.4 6 10.6 6.6 11.5 7.5L12.9 6.1C11.6 4.8 9.9 4 8 4C6.1 4 4.4 4.8 3.1 6.1L4.5 7.5C5.4 6.6 6.6 6 8 6Z" fill="#111"/>
+          <circle cx="8" cy="10" r="1.5" fill="#111"/>
+        </svg>
+        <svg width="26" height="13" viewBox="0 0 26 13" fill="none">
+          <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="#111" stroke-opacity="0.35"/>
+          <rect x="2" y="2" width="18" height="9" rx="2" fill="#111"/>
+          <path d="M24 4.5V8.5C24.8 8.2 25.5 7.5 25.5 6.5C25.5 5.5 24.8 4.8 24 4.5Z" fill="#111" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <!-- Back Arrow -->
+        <div class="back-arrow" onclick="window.history.back()">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Logo -->
+        <div class="scrip-logo">
+          <!-- NSE Bull logo approximation -->
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="11" fill="#1a1a2e"/>
+            <text x="11" y="15" font-size="10" font-weight="800" fill="#FFD700" text-anchor="middle" font-family="Inter,sans-serif">N</text>
+          </svg>
+        </div>
+
+        <!-- Title + Chevron -->
+        <div class="scrip-title-row">
+          <span class="scrip-name">Nifty 50</span>
+          <div class="dropdown-chevron">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M4 5.5L7 8.5L10 5.5" stroke="#777777" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exchange Toggle -->
+      <div class="exchange-toggle">
+        <div class="exchange-btn active">NSE</div>
+        <div class="exchange-btn">BSE</div>
+      </div>
+
+      <!-- LTP -->
+      <div class="topbar-right">
+        <span class="ltp-value">24,571.09</span>
+        <span class="ltp-change">-120.34 / -2.99%</span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <div class="tab active">Today</div>
+      <div class="tab">OI</div>
+      <div class="tab">Positions</div>
+      <div class="tab">Chart</div>
+      <div class="tab">News</div>
+    </div>
+
+    <!-- SCROLLABLE PAGE CONTENT -->
+    <div class="page-scroll">
+
+      <!-- TODAY'S MARKET CARD -->
+      <div class="section-card">
+        <div class="section-header">Today's Market</div>
+
+        <!-- 4-col stats -->
+        <div class="market-stats-grid">
+          <div class="stat-col">
+            <span class="stat-label">Open</span>
+            <span class="stat-value">24,648.70</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">High</span>
+            <span class="stat-value green">24,702.45</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Low</span>
+            <span class="stat-value red">24,512.90</span>
+          </div>
+          <div class="stat-col">
+            <span class="stat-label">Prev Close</span>
+            <span class="stat-value">24,691.43</span>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Range Bars -->
+        <div class="range-section">
+
+          <!-- Circuit Range (Day Range) -->
+          <div class="range-row">
+            <div class="range-labels">
+              <span class="range-title">Day Range</span>
+              <div class="range-values">
+                <span class="range-val"><span>L </span>24,512</span>
+                <span class="range-val"><span>H </span>24,702</span>
+              </div>
+            </div>
+            <div class="range-track">
+              <!-- fill from 0% to 30% of range occupied by current price -->
+              <div class="range-fill" style="left: 0%; width: 61%;"></div>
+              <div class="range-thumb" style="left: 61%;"></div>
+            </div>
+          </div>
+
+          <!-- 52-Week Range -->
+          <div class="range-row">
+            <div class="range-labels">
+              <span class="range-title">52‑Week Range</span>
+              <div class="range-values">
+                <span class="range-val"><span>L </span>21,964</span>
+                <span class="range-val"><span>H </span>26,277</span>
+              </div>
+            </div>
+            <div class="range-track">
+              <div class="range-fill" style="left: 0%; width: 59%;"></div>
+              <div class="range-thumb" style="left: 59%;"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NIFTY 50 ETFs SECTION -->
+      <div class="etf-section">
+
+        <!-- Header -->
+        <div class="etf-section-head">
+          <div class="etf-section-title-row">
+            <span class="etf-section-title">Nifty 50 ETFs</span>
+            <span class="etf-view-all">View all &rsaquo;</span>
+          </div>
+          <span class="etf-section-sub">Own India's Top 50 companies from ₹10</span>
+        </div>
+
+        <!-- Social Proof Strip -->
+        <div class="social-strip">
+          <div class="social-copy">
+            <strong>6 lakh+ investors started here. You can too.</strong>
+            <span>India's most-owned ETF · low cost · ₹10 to start</span>
+          </div>
+        </div>
+
+        <!-- Horizontal ETF Cards -->
+        <div class="h-scroll">
+
+          <div class="bsc">
+            <div class="bsc-header">
+              <div class="amc-logo amc-nippon">NI</div>
+              <div class="bsc-title"><div class="name">Nippon India Nifty 50 BeES</div></div>
+              <div class="bsc-ltp">
+                <span class="s-label">LTP</span>
+                <span class="s-value">₹278.50</span>
+              </div>
+            </div>
+            <div class="bsc-divider"></div>
+            <div class="bsc-slots">
+              <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹22,450 Cr</span></div>
+              <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+24.5%</span></div>
+            </div>
+          </div>
+
+          <div class="bsc">
+            <div class="bsc-header">
+              <div class="amc-logo amc-sbi">SBI</div>
+              <div class="bsc-title"><div class="name">SBI ETF Nifty 50</div></div>
+              <div class="bsc-ltp">
+                <span class="s-label">LTP</span>
+                <span class="s-value">₹232.10</span>
+              </div>
+            </div>
+            <div class="bsc-divider"></div>
+            <div class="bsc-slots">
+              <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹1.85L Cr</span></div>
+              <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.8%</span></div>
+            </div>
+          </div>
+
+          <div class="bsc">
+            <div class="bsc-header">
+              <div class="amc-logo amc-hdfc">HD</div>
+              <div class="bsc-title"><div class="name">HDFC Nifty 50 ETF</div></div>
+              <div class="bsc-ltp">
+                <span class="s-label">LTP</span>
+                <span class="s-value">₹246.80</span>
+              </div>
+            </div>
+            <div class="bsc-divider"></div>
+            <div class="bsc-slots">
+              <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹12,567 Cr</span></div>
+              <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+22.9%</span></div>
+            </div>
+          </div>
+
+          <div class="bsc">
+            <div class="bsc-header">
+              <div class="amc-logo amc-kotak">KO</div>
+              <div class="bsc-title"><div class="name">Kotak Nifty 50 ETF</div></div>
+              <div class="bsc-ltp">
+                <span class="s-label">LTP</span>
+                <span class="s-value">₹196.20</span>
+              </div>
+            </div>
+            <div class="bsc-divider"></div>
+            <div class="bsc-slots">
+              <div class="slot left"><span class="s-label">AUM</span><span class="s-value">₹8,234 Cr</span></div>
+              <div class="slot right"><span class="s-label">1Y Return</span><span class="s-value green">+23.2%</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- OPTIONS SMARTLIST CARD -->
+      <div class="section-card" style="margin-bottom: 0;">
+
+        <div class="options-header">
+          <span class="options-title">Options Smartlist</span>
+          <span class="options-more">See all</span>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="filter-chips">
+          <div class="chip active">All</div>
+          <div class="chip">Bullish</div>
+          <div class="chip">Bearish</div>
+          <div class="chip">Neutral</div>
+          <div class="chip">High OI</div>
+          <div class="chip">Near ATM</div>
+        </div>
+
+        <!-- Option Rows -->
+        <div class="option-list">
+
+          <!-- Row 1 -->
+          <div class="option-row">
+            <div class="option-left">
+              <div class="option-name">24,600 CE</div>
+              <div class="option-sub">
+                <span class="option-type-ce">CE</span>
+                Apr 17 · Weekly
+              </div>
+            </div>
+            <div class="option-right">
+              <div class="option-price-block">
+                <span class="option-ltp green">₹142.50</span>
+                <span class="option-pct green">+18.2%</span>
+              </div>
+              <div class="add-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#542087" stroke-width="1.2"/>
+                  <path d="M8 5V11M5 8H11" stroke="#542087" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="option-row">
+            <div class="option-left">
+              <div class="option-name">24,500 PE</div>
+              <div class="option-sub">
+                <span class="option-type-pe">PE</span>
+                Apr 17 · Weekly
+              </div>
+            </div>
+            <div class="option-right">
+              <div class="option-price-block">
+                <span class="option-ltp red">₹198.75</span>
+                <span class="option-pct red">-6.4%</span>
+              </div>
+              <div class="add-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#542087" stroke-width="1.2"/>
+                  <path d="M8 5V11M5 8H11" stroke="#542087" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="option-row">
+            <div class="option-left">
+              <div class="option-name">24,700 CE</div>
+              <div class="option-sub">
+                <span class="option-type-ce">CE</span>
+                Apr 24 · Monthly
+              </div>
+            </div>
+            <div class="option-right">
+              <div class="option-price-block">
+                <span class="option-ltp green">₹89.30</span>
+                <span class="option-pct green">+24.5%</span>
+              </div>
+              <div class="add-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#542087" stroke-width="1.2"/>
+                  <path d="M8 5V11M5 8H11" stroke="#542087" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="option-row">
+            <div class="option-left">
+              <div class="option-name">24,400 PE</div>
+              <div class="option-sub">
+                <span class="option-type-pe">PE</span>
+                Apr 24 · Monthly
+              </div>
+            </div>
+            <div class="option-right">
+              <div class="option-price-block">
+                <span class="option-ltp red">₹267.10</span>
+                <span class="option-pct red">-3.1%</span>
+              </div>
+              <div class="add-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#542087" stroke-width="1.2"/>
+                  <path d="M8 5V11M5 8H11" stroke="#542087" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 5 -->
+          <div class="option-row">
+            <div class="option-left">
+              <div class="option-name">24,600 PE</div>
+              <div class="option-sub">
+                <span class="option-type-pe">PE</span>
+                Apr 17 · Weekly
+              </div>
+            </div>
+            <div class="option-right">
+              <div class="option-price-block">
+                <span class="option-ltp green">₹312.60</span>
+                <span class="option-pct green">+9.7%</span>
+              </div>
+              <div class="add-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7.5" stroke="#542087" stroke-width="1.2"/>
+                  <path d="M8 5V11M5 8H11" stroke="#542087" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM CTA -->
+      <div class="bottom-cta-wrap">
+        <button class="cta-btn">Start Trading</button>
+      </div>
+
+    </div><!-- /page-scroll -->
+  </div><!-- /phone -->
+</body>
+</html>
